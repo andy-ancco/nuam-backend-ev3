@@ -1,17 +1,14 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.contrib.auth import get_user_model
 
 class Usuario(AbstractUser):
     ROLES = [
-        ("ADMIN", "Administrador NUAM"),
+        ("ADMIN", "Administrador"),
         ("EMPLEADO", "Empleado NUAM"),
-        ("INVERS", "Inversionista NUAM"),
     ]
     rol = models.CharField(max_length=10, choices=ROLES, default="EMPLEADO")
     activo = models.BooleanField(default=True)
-
-    def __str__(self):
-        return f"{self.username} ({self.rol})"
 
 class Calificacion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
@@ -23,13 +20,17 @@ class Certificado(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200)
     descripcion = models.TextField()
-    fecha_emision = models.DateField(auto_now_add=True)
     archivo_pdf = models.FileField(upload_to="certificados/")
+    fecha_emision = models.DateField(auto_now_add=True)
 
 class Auditoria(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
-    accion = models.CharField(max_length=200)
-    tabla = models.CharField(max_length=100)
-    detalle = models.TextField()
+    accion = models.CharField(max_length=255)
     fecha = models.DateTimeField(auto_now_add=True)
-    ip = models.GenericIPAddressField(null=True)
+
+class Documento(models.Model):
+    usuario = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=200)
+    metadata = models.JSONField(default=dict) 
+    archivo = models.FileField(upload_to="documentos/")
+    creado = models.DateTimeField(auto_now_add=True)
