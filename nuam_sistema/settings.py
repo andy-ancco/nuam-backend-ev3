@@ -13,14 +13,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-123-change-this"
 DEBUG = True
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     ".onrender.com",
 ]
-
+CORS_ALLOW_CREDENTIALS = True
 # CORS
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    "https://tudominio.onrender.com",  
+]
 
 # App principal (Django + REST + JWT)
 INSTALLED_APPS = [
@@ -32,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     # Aplicaciones locales
-    "nuam_usuario",
+    "nuam_usuario.apps.NuamUsuarioConfig",
     "nuam_admin",
 
     # Dependencias externas
