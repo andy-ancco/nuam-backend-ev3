@@ -1,18 +1,14 @@
-
 from rest_framework import serializers
 from .models import Usuario, Calificacion, Certificado, Auditoria
 
 
-# --------------------------
-# 🟦 Usuario
-# --------------------------
 class UsuarioSerializer(serializers.ModelSerializer):
+    nombre = serializers.CharField(source="get_full_name", read_only=True)
 
     class Meta:
         model = Usuario
         fields = "__all__"
         read_only_fields = ["last_login", "date_joined"]
-
 
 # --------------------------
 # 🟩 Calificación

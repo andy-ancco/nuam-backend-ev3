@@ -11,6 +11,7 @@ from .serializers import (
     AuditoriaSerializer
 )
 
+# 📌 IMPORTACIÓN CORRECTA
 from .permissions import IsAdmin, IsEmpleadoOrAdmin
 
 
