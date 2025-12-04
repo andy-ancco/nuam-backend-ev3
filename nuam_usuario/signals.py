@@ -22,10 +22,17 @@ def logout_success(sender, request, user, **kwargs):
 def login_failed(sender, credentials, **kwargs):
     log(None, f"Intento fallido de login con usuario: {credentials.get('username')}")
 
+
 # Subida / modificación certificados
 @receiver(post_save, sender=Certificado)
 def certificado_guardado(sender, instance, created, **kwargs):
-    log(instance.usuario, f"{'Subió' if created else 'Modificó'} un certificado: {instance.titulo}")
+    # Evitar errores si aún no tiene usuario asignado
+    if hasattr(instance, "usuario") and instance.usuario is not None:
+        log(
+            instance.usuario,
+            f"{'Subió' if created else 'Modificó'} un certificado: {instance.titulo}"
+        )
+
 
 # Eliminación certificado
 @receiver(post_delete, sender=Certificado)
