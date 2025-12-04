@@ -11,47 +11,38 @@ from .serializers import (
     AuditoriaSerializer
 )
 
-# Importamos permisos personalizados
-from .permissions import IsAdmin, IsEmpleado
+from .permissions import IsAdmin, IsEmpleadoOrAdmin
 
-
-# ---------------------- VIEWSETS CON PERMISOS ---------------------- #
 
 class UsuarioViewSet(ModelViewSet):
-    """Solo el administrador puede ver, editar o eliminar usuarios."""
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
     permission_classes = [IsAdmin]
 
 
 class CertificadoViewSet(ModelViewSet):
-    """Empleado y Admin pueden gestionar certificados."""
     queryset = Certificado.objects.all()
     serializer_class = CertificadoSerializer
-    permission_classes = [IsAuthenticated, (IsEmpleado | IsAdmin)]
+    permission_classes = [IsAuthenticated, IsEmpleadoOrAdmin]
 
 
 class CalificacionViewSet(ModelViewSet):
-    """Empleado y Admin pueden gestionar calificaciones."""
     queryset = Calificacion.objects.all()
     serializer_class = CalificacionSerializer
-    permission_classes = [IsAuthenticated, (IsEmpleado | IsAdmin)]
+    permission_classes = [IsAuthenticated, IsEmpleadoOrAdmin]
 
 
 class AuditoriaViewSet(ModelViewSet):
-    """Solo el administrador puede acceder a auditorías."""
     queryset = Auditoria.objects.all()
     serializer_class = AuditoriaSerializer
     permission_classes = [IsAdmin]
 
 
-# ---------------------- ENDPOINT EXTRA ---------------------- #
-
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def user_info(request):
-    """Retorna información del usuario autenticado."""
     return Response({
+        "id": request.user.id,
         "username": request.user.username,
         "rol": request.user.rol,
         "email": request.user.email
