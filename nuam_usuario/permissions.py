@@ -4,8 +4,12 @@ class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.rol == "ADMIN"
 
-
 class IsEmpleado(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.rol == "EMPLEADO"
 
+class IsEmpleadoOrAdmin(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and (
+            request.user.rol == "ADMIN" or request.user.rol == "EMPLEADO"
+        )
