@@ -1,3 +1,4 @@
+
 from rest_framework import serializers
 from .models import Usuario, Calificacion, Certificado, Auditoria
 
@@ -56,3 +57,4 @@ class AuditoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Auditoria
         fields = "__all__"
+
