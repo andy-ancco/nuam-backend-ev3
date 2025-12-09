@@ -19,6 +19,9 @@ class Calificacion(models.Model):
     puntaje = models.IntegerField()
     comentario = models.TextField(blank=True)
     fecha = models.DateTimeField(auto_now_add=True)
+    
+    # 🟢 NUEVO: Validación de calificación hecha por el empleado
+    validado = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Calificación {self.id} - {self.usuario.username} - {self.puntaje}"
@@ -74,3 +77,4 @@ class Documento(models.Model):
 
     def __str__(self):
         return f"{self.titulo} - {self.usuario.username}"
+

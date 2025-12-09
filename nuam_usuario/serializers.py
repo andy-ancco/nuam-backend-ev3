@@ -30,17 +30,18 @@ class CalificacionSerializer(serializers.ModelSerializer):
 # 🟧 Certificado (de cliente, ligado a calificación)
 # --------------------------
 class CertificadoSerializer(serializers.ModelSerializer):
-    # nombre del cliente al que pertenece la calificación
-    cliente_nombre = serializers.CharField(
-        source="calificacion.usuario.get_full_name",
-        read_only=True
-    )
+    cliente_nombre = serializers.SerializerMethodField()
 
     class Meta:
         model = Certificado
         fields = "__all__"
-        # ❗ ya no hay usuario aquí; lo controla el backend/admin
         read_only_fields = ["validado", "fecha_subida"]
+
+    def get_cliente_nombre(self, obj):
+        if obj.calificacion and obj.calificacion.usuario:
+            return obj.calificacion.usuario.get_full_name()
+        return "Sin asignar"
+
 
 
 # --------------------------
